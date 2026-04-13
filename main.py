@@ -3,6 +3,7 @@ import asyncio
 import gspread
 from datetime import datetime, timedelta
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import json
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
@@ -31,7 +32,9 @@ scope = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
+creds_dict = json.loads(os.getenv("GOOGLE_CREDS"))
+
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 sheet_employees = client.open("WorkTime").worksheet("Employees")
